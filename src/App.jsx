@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AuthProvider, { useAuth } from './context/AuthContext';
-import Navbar from './components/NavBar';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -17,10 +18,18 @@ export default function App(){
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          {/* Public homepage */}
+          <Route path="/" element={<Home />} />
+
+          {/* Auth-only routes */}
+          <Route path="/projects" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/projects/:id" element={<PrivateRoute><ProjectPage /></PrivateRoute>} />
+
+          {/* Auth pages */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+
+          {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
