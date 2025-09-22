@@ -1,79 +1,100 @@
 # Live Site
 https://captone-frontend.onrender.com
 
-# API Endpoints
-All protected routes require ``` Authorization: Bearer <token> ```. <br>
-Ownership enforced, users can only access their projects and their tasks.
+# API Endpoints (Consumed by the Frontend)
+Endpoints are implemented by the backend. They’re listed here so reviewers understand what the frontend calls. All protected endpoints require the header:
+```Authorization: Bearer <token>```
 
 ### Auth
 
-- **POST** ```/api/auth/register``` <br>
-Body: ```{ name, email, password }``` <br>
-→ ```{ token, user: { id, name, email } }```
+**POST** ```/api/auth/register```
 
-- **POST** ```/api/auth/login```<br>
-Body: ```{ email, password }```<br>
-→ ```{ token, user: { id, name, email } }```
+- **Body**: ```{ "name": "Alice", "email": "alice@example.com", "password": "StrongP@ss1" }```
 
-### Projects
+- **Returns**: ```{ "token": "…", "user": { "id": "...", "name": "Alice", "email": "alice@example.com" } }```
 
-- **GET** ```/api/projects``` (protected)<br>
-List my projects.
+- Used by: Register form
 
-- **POST** ```/api/projects``` (protected)
-Body: ```{ name, description?, status? }```(status: ```'To Do'|'In Progress'|'Done'```, default ```'To Do'```)
-Create a project.
+**POST** ```/api/auth/login```
 
-- **GET** ```/api/projects/:id``` (protected, owner-only)
-Get a single project.
+- **Body**: { "email": "alice@example.com", "password": "StrongP@ss1" }
 
-- **PUT** ```/api/projects/:id``` (protected, owner-only)
-Body (any subset): ```{ name?, description?, status? }```
-Update a project.
+- **Returns**: { "token": "…", "user": { "id": "...", "name": "Alice", "email": "alice@example.com" } }
 
-- **DELETE** ```/api/projects/:id``` (protected, owner-only)
-Delete a project.
+- Used by: Login form
 
-### Tasks (nested)
+**Projects**
 
-- **GET** ```/api/projects/:projectId/tasks``` (protected, owner of parent)
-List tasks for the project.
+**GET** ```/api/projects``` (protected)
 
-- **POST** ```/api/projects/:projectId/tasks``` (protected, owner of parent)
-Body: ```{ title, description?, status? }``` (default ```'To Do'```)
-Create a task.
+- **Description**: List projects owned by the logged-in user.
 
-- **PUT** ```/api/projects/:projectId/tasks/:taskId``` (protected, owner of parent)
-Body (any subset): ```{ title?, description?, status? }```
-Update a task.
+- **Returns**: ```[{ _id, name, description, status, createdAt, updatedAt, ... }, ...]```
 
-- **DELETE** ```/api/projects/:projectId/tasks/:taskId``` (protected, owner of parent)
-Delete a task.
+- Used by: Dashboard (group by ```status```)
 
-### Models
+**POST** /api/projects (protected)
 
-- **User**: ```{ name, email(unique), password(hashed) }```
+- **Body**: ```{ "name": "Capstone", "description": "MERN app", "status": "To Do" }```
 
-- **Project**: ```{ owner:UserRef, name, description, status }```
+- **Returns**: The created Project object.
 
-- **Task**: ```{ project:ProjectRef, title, description, status }```
+- Used by: “Create Project” form
 
-### Render Deployment 
+**GET** ```/api/projects/:id``` (protected; owner only)
 
-- **Service Type**: Web Service
+- **Description**: Get a single project.
 
-- **Root Directory**: ```server```
+- **Returns**: ```{ _id, name, description, status, ... }```
 
-- **Build Command**: ```npm install```
+- Used by: Project page header/details
 
-- **Start Command**: ```npm start```
+**PUT** ```/api/projects/:id``` (protected; owner only)
 
-- **Environment**: set ```MONGO_URI``` and ```JWT_SECRET``` (Render provides ```PORT``` automatically)
+- **Body** ```(any subset): { "name"?, "description"?, "status"?: "To Do"|"In Progress"|"Done" }```
 
-### Troubleshooting
+- **Returns**: Updated Project object.
 
-- **“Failed to fetch” from client** → API not reachable; confirm logs show “MongoDB connected / API running”.
+- Used by: Project edit (inline), status dropdown on cards
 
-- **401 Unauthorized** → Missing/invalid ```Authorization: Bearer <token>```.
+**DELETE** ```/api/projects/:id``` (protected; owner only)
 
-- **Mongo connection errors** → Check ```MONGO_URI```, Atlas IP allowlist, URL-encoded password.
+- **Description**: Delete a project.
+
+- **Returns**: ```{ "message": "Deleted" }```
+
+- Used by: Project delete button
+
+## Tasks (nested under a project)
+
+**GET** ```/api/projects/:projectId/tasks``` (protected; owner of parent project)
+
+- **Description**: List tasks for a project.
+
+- **Returns**: ```[{ _id, project, title, description, status, ... }, ...]```
+
+- Used by: Project page 
+
+**POST** ```/api/projects/:projectId/tasks ```(protected; owner of parent)
+
+- **Body**: ```{ "title": "Build login UI", "description": "…", "status": "To Do" }```
+
+- **Returns**: Created Task object.
+
+- Used by: “Add Task” form
+
+**PUT** ```/api/projects/:projectId/tasks/:taskId ```(protected; owner of parent)
+
+- **Body (any subset)**: ``{ "title"?, "description"?, "status"?: "To Do"|"In Progress"|"Done" }``
+
+- **Returns**: Updated Task object.
+
+- Used by: Task edit (inline) and **status dropdown** per task
+
+**DELETE** ```/api/projects/:projectId/tasks/:taskId``` (protected; owner of parent)
+
+- **Description**: Delete a task.
+
+- **Returns**: ```{ "message": "Deleted" }```
+
+- Used by: Task delete button
