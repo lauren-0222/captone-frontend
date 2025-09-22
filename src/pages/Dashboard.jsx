@@ -8,14 +8,14 @@ export default function Dashboard(){
   const [projects, setProjects] = useState([]);
   const [name,setName] = useState('');
   const [description,setDescription] = useState('');
-  const [newStatus, setNewStatus] = useState('To Do'); // NEW
+  const [newStatus, setNewStatus] = useState('To Do');
   const [err,setErr]=useState('');
 
   // editing state
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState('');
   const [editDesc, setEditDesc] = useState('');
-  const [editStatus, setEditStatus] = useState('To Do'); // NEW
+  const [editStatus, setEditStatus] = useState('To Do');
 
   const load = async ()=>{
     try { setProjects(await api.projects.list()); }
@@ -123,12 +123,13 @@ export default function Dashboard(){
                   </>
                 ) : (
                   <>
+                    {/* Title/description (clicking the title also opens the project) */}
                     <Link to={`/projects/${p._id}`} className="block hover:opacity-90">
                       <div className="text-lg font-semibold">{p.name}</div>
                       <div className="text-sm text-gray-600">{p.description}</div>
                     </Link>
 
-                    {/* Always-visible project status dropdown */}
+                    {/* Project status dropdown */}
                     <div className="mt-3">
                       <div className="label mb-1">Status</div>
                       <select
@@ -140,7 +141,11 @@ export default function Dashboard(){
                       </select>
                     </div>
 
-                    <div className="flex gap-2 mt-3">
+                    {/* Clear action row including a big 'Open Project' CTA */}
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      <Link to={`/projects/${p._id}`} className="btn bg-emerald-600 text-white">
+                        Open Project (View Tasks)
+                      </Link>
                       <button className="btn bg-slate-100" onClick={()=>startEdit(p)}>Edit</button>
                       <button className="btn bg-red-600 text-white" onClick={()=>deleteProject(p._id)}>Delete</button>
                     </div>

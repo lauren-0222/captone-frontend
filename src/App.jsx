@@ -29,6 +29,9 @@ export default function App(){
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
+          <Route path="/projects/:id" element={<PrivateRoute><ProjectPage /></PrivateRoute>} />
+
+
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
