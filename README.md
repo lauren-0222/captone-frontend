@@ -1,4 +1,6 @@
 # Full-Stack MERN Application
+### Live Site:
+https://captone-frontend.onrender.com
 ### Overview
 For my capstone project, I will be building Pro-Tasker, a modern project management tool designed for both individual users and small teams. The application will be a full-stack MERN app (MongoDB, Express, React, Node.js) that integrates secure authentication, robust backend APIs, dynamic frontend features, and full deployment.
 The goal of this project is to demonstrate mastery of the entire MERN stack, bringing together everything I have learned — backend architecture, API development, database modeling, frontend state management, and deployment pipelines — into one polished, real-world application.
