@@ -15,7 +15,7 @@ export default function Home() {
       <div className="card">
         <h1 className="text-3xl font-bold mb-2">Welcome to Pro-Tasker</h1>
         <p className="text-gray-700 mb-4">
-          Organize projects, track tasks by status (To Do, In Progress, Done), and view live dashboards and project details.
+          Organize projects, track tasks & projects by status (To Do, In Progress, Done), and view live dashboards and project details.
         </p>
         <button className="btn bg-emerald-600 text-white" onClick={getStarted}>
           Get Started
