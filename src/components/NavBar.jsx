@@ -9,7 +9,7 @@ export default function Navbar() {
     if (user) {
       navigate('/projects');
     } else {
-      // send a message to Login screen
+      // send message to Login screen
       navigate('/login', { state: { msg: 'Please log in to view your Projects.' } });
     }
   };
